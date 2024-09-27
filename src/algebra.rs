@@ -12,14 +12,18 @@ pub struct AlgebraicVector<'v, T: Copy + Mul> {
     pub data: Vec<T>,
 }
 
-impl<'v, T: Copy + Mul> Algebra<'v, T> {
+impl<'v, T: Copy + Mul> Algebra<'v, T>
+    where T: Copy + Mul
+{
     pub fn create_vector(self, data: Vec<T>) -> AlgebraicVector<'v, T> {
         AlgebraicVector {algebra: self, data }
     }
 
 }
 
-impl<'v, T: Copy + Mul<Output = T> + AddAssign + Sub<Output = T>> Mul for AlgebraicVector<'v, T> {
+impl<'v, T> Mul for AlgebraicVector<'v, T>
+    where T: Copy + Mul<Output = T> + AddAssign + Sub<Output = T>
+{
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
@@ -38,7 +42,9 @@ impl<'v, T: Copy + Mul<Output = T> + AddAssign + Sub<Output = T>> Mul for Algebr
     }
 }
 
-impl<'v, T: Copy + Clone + Mul> Index<usize> for AlgebraicVector<'v, T> {
+impl<'v, T> Index<usize> for AlgebraicVector<'v, T>
+    where T: Copy + Mul + Add
+{
     type Output = T;
 
     fn index(&self, index: usize) -> &Self::Output {
@@ -46,7 +52,9 @@ impl<'v, T: Copy + Clone + Mul> Index<usize> for AlgebraicVector<'v, T> {
     }
 }
 
-impl<'v, T: Copy + Clone + Mul + Add<Output=T>> Add for AlgebraicVector<'v, T> {
+impl<'v, T> Add for AlgebraicVector<'v, T>
+    where T: Copy + Clone + Mul + Add<Output=T>
+{
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
@@ -60,7 +68,9 @@ impl<'v, T: Copy + Clone + Mul + Add<Output=T>> Add for AlgebraicVector<'v, T> {
     }
 }
 
-impl<'v, T: Copy + Clone + Mul + AddAssign> AddAssign for AlgebraicVector<'v, T> {
+impl<'v, T> AddAssign for AlgebraicVector<'v, T>
+    where T: Copy + Clone + Mul + AddAssign
+{
     fn add_assign(&mut self, rhs: Self) {
         for i in 0..self.algebra.dim {
             self.data[i] += rhs[i];
